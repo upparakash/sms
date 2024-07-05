@@ -16,6 +16,7 @@ const TeacherHomework = ({route}) => {
     const [duration, setDuration] = useState('');
     const [homework, setHomework] = useState('');
     const [errors, setErrors] = useState({});
+
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {email} = route.params;
 
@@ -45,14 +46,15 @@ const TeacherHomework = ({route}) => {
 
     const TeacherHomework = async () => {
         if (validate()) {
-            axios.post("http://10.0.2.2:3000/TeacherHomework", {
+            axios.post("http://10.0.2.2:3000/teacherHomework", {
                 classname,
                 section,
                 subject,
                 typeOfHomework,
                 title,
                 duration,
-                homework
+                homework,
+                email
             })
                 .then(response => {
                     if (response.status === 200) {
@@ -109,7 +111,7 @@ const TeacherHomework = ({route}) => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.right}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ClassWork',{ email })}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TeacherHomeWorkList',{ email })}>
                      <Text style={styles.header}>Homework List</Text>
                 </TouchableOpacity>
             </View>

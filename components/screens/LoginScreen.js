@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     alignItems: 'flex-start',
-    marginTop: 160,
+    marginTop: 30,
     width: '80%',
   },
   labelContainer: {

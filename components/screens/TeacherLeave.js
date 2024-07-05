@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Text, TextInput, StyleSheet, Modal, View } from 'react-native';
+import { Text, TextInput, StyleSheet, Modal, View,Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import Image1 from '../assets/BackArrow.png';
 
-const TeacherLeave = () => {
+const TeacherLeave = ({route}) => {
   const navigation = useNavigation();
   const [employeeid, setEmployeeId] = useState('');
   const [purpose, setPurpose] = useState('');
@@ -13,6 +14,7 @@ const TeacherLeave = () => {
   const [description, setDescription] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [errors, setErrors] = useState({});
+  const email = route.params.email;
 
   const validate = () => {
     const newErrors = {};
@@ -43,6 +45,7 @@ const TeacherLeave = () => {
     if (validate()) {
       axios.post('http://10.0.2.2:3000/leave', {
         employeeid,
+        email,
         purpose,
         startdate,
         enddate,
@@ -71,7 +74,17 @@ const TeacherLeave = () => {
 
   return (
     <ScrollView style={styles.container}>
-        <Text style={styles.headding}>Employee Id</Text>
+      <View style={styles.heading}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={Image1} style={styles.image} />
+        </TouchableOpacity>
+        <Text style={styles.header}>Leave Letter</Text>
+        <TouchableOpacity onPress={() =>navigation.navigate('TeacherLeaveApproval',{email})}>
+           <Text style ={styles.button}>My Leaves</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.container1}>
+      <Text style={styles.headding}>Employee Id</Text>
       <TextInput
         style={styles.text}
         value={employeeid}
@@ -130,7 +143,7 @@ const TeacherLeave = () => {
           <TouchableOpacity
             onPress={() => {
               togglePopup();
-              navigation.navigate('TeacherHomeScreen');
+              navigation.navigate('TeacherHomeScreen',{email});
             }}
             style={styles.closeButton}
           >
@@ -138,6 +151,7 @@ const TeacherLeave = () => {
           </TouchableOpacity>
         </View>
       </Modal>
+      </View>
     </ScrollView>
   );
 };
@@ -146,13 +160,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  container1: {
+    backgroundColor: '#fff',
     padding: 20,
+  },
+  heading: {
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    borderBottomWidth :2,
+    borderColor:'gray',
+    margin:15,
+    marginBottom:10,
+    padding:3,
+  },  
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
+  },
+  image: {
+    height: 30,
+    width: 30,
   },
   headding:{
     fontSize:18,
     color:'black',
     textAlign:'left',
     fontWeight:'bold',
+  },
+  button: {
+    alignItems: 'center',
+    color: "white",
+    backgroundColor: "#3F1175",
+    fontSize: 18,
+    fontWeight: 'bold',
+    borderRadius: 15,
+    padding: 5,
+    textAlign: 'center',
+    left:10,
+    top:-5,
   },
   text: {
     borderWidth: 1,

@@ -12,14 +12,16 @@ const TeacherNotifications = ({ route }) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const [complaintsResponse, announcementsResponse] = await Promise.all([
+        const [complaintsResponse, announcementsResponse, leaveResponse] = await Promise.all([
           axios.get('http://10.0.2.2:3000/complaints?recipient=teacher'),
-          axios.get('http://10.0.2.2:3000/reciveAnnouncements')
+          axios.get('http://10.0.2.2:3000/reciveAnnouncements'),
+          axios.get(`http://10.0.2.2:3000/leaveNotification?email=${email}`)
         ]);
 
         const combinedData = [
           ...complaintsResponse.data.map(item => ({ ...item, type: 'complaint' })),
-          ...announcementsResponse.data.map(item => ({ ...item, type: 'announcement' }))
+          ...announcementsResponse.data.map(item => ({ ...item, type: 'announcement' })),
+          ...leaveResponse.data.map(item => ({ ...item, type: 'leave' }))
         ];
 
         // Optionally sort combinedData by date if there's a date field available
@@ -27,15 +29,24 @@ const TeacherNotifications = ({ route }) => {
 
         setNotifications(combinedData);
       } catch (err) {
+        console.error('Error fetching notifications:', err);
         setErrors({ general: 'Failed to load notifications' });
       }
     };
 
     fetchNotifications();
-  }, []);
+  }, [email]);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => item.type === 'complaint' && navigation.navigate('ReciveComplaint', { email })}>
+    <TouchableOpacity onPress={() => {
+      if (item.type === 'complaint') {
+        navigation.navigate('ReciveComplaint', { email });
+      } else if (item.type === 'announcement') {
+        // Handle announcement navigation if necessary
+      } else if (item.type === 'leave') {
+        navigation.navigate('TeacherLeaveApproval', { email });
+      }
+    }}>
       <View style={styles.notificationItem}>
         {item.type === 'complaint' ? (
           <>
@@ -44,11 +55,18 @@ const TeacherNotifications = ({ route }) => {
             <Text style={styles.text}>Class: {item.className} Section: {item.section}</Text>
             <Text style={styles.text}>Reason: {item.reason}</Text>
           </>
-        ) : (
+        ) : item.type === 'announcement' ? (
           <>
             <Text style={styles.text1}>School Announcement</Text>
             <Text style={styles.text}>Subject: {item.subject}</Text>
             <Text style={styles.text}>{item.explanation}</Text>
+          </>
+        ) : (
+          <>
+            <Text style={styles.text1}>New Leave Approval</Text>
+            <Text style={styles.text}>Purpose: {item.purpose}</Text>
+            <Text style={styles.text}>Duration: {item.startdate} To {item.enddate}</Text>
+            <Text style={styles.text}>Description: {item.description}</Text>
           </>
         )}
       </View>
@@ -91,7 +109,7 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 16,
     color: 'red',
-    textAlign:'center'
+    textAlign: 'center'
   },
   error: {
     color: 'red',

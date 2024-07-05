@@ -1,51 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Modal } from 'react-native';
 import Image5 from '../assets/Component1.png';
 import Image2 from '../assets/Menu.png';
 import Image6 from '../assets/Ellipse2.png';
 import Image3 from '../assets/Subtract.png';
-import Image7 from '../assets/Student1.png';
-import Image8 from '../assets/Teacher1.png';
-import Image9 from '../assets/Admin.png';
+import Image4 from '../assets/Search.png';
 import Image10 from '../assets/profilepic.png';
 import Image1 from '../assets/Menuicon.png';
 
 const AdminView = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [profileVisible, setProfileVisible] = useState(true);
-  const [studentCount, setStudentCount] = useState(0);
-  const [teacherCount, setTeacherCount] = useState(0);
-
-  // Fetch teacher count
-  useEffect(() => {
-    axios.get('http://10.0.2.2:3000/teacherCount')
-      .then(response => {
-        if (response.status === 200) {
-          setTeacherCount(response.data.Teacher_Count);
-        } else {
-          console.error('Failed to fetch teacher count:', response.status);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching teacher count:', error);
-      });
-  }, []);
-
-  // Fetch student count
-  useEffect(() => {
-    axios.get('http://10.0.2.2:3000/studentCount')
-      .then(response => {
-        if (response.status === 200) {
-          setStudentCount(response.data.Student_Count);
-        } else {
-          console.error('Failed to fetch student count:', response.status);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching student count:', error);
-      });
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -60,28 +25,18 @@ const AdminView = ({ navigation }) => {
       </TouchableOpacity>
       <Image source={Image6} style={styles.image6} />
       <Image source={Image3} style={styles.image3} />
-      <View style={styles.squareRow}>
-        <TouchableOpacity style={styles.square} onPress={() => navigation.navigate('AdminStudentHomeScreen')}>
-          <Image source={Image7} style={styles.squareImage} />
-          <Text style={styles.loginButtonText}>Total {studentCount} Students</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.square} onPress={() => navigation.navigate('AdminTeacherHomeScreen')}>
-          <Image source={Image8} style={styles.squareImage} />
-          <Text style={styles.loginButtonText}>Total {teacherCount} Teachers</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.square} onPress={() => navigation.navigate('ClassesTable')}>
-          <Image source={Image9} style={styles.squareImage} />
-          <Text style={styles.loginButtonText}>Parent Details</Text>
-        </TouchableOpacity>
+      <View style={styles.searchContainer}>
+        <TextInput style={styles.searchBox} placeholder="search......" />
+        <Image source={Image4} style={styles.searchIcon} />
       </View>
       
       <Modal
-        animationType="slide-left"
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
@@ -89,7 +44,7 @@ const AdminView = ({ navigation }) => {
               <Image source={Image1} style={styles.image1} />
             </TouchableOpacity>
             <Image source={Image10} style={styles.image10} />
-            <TouchableOpacity onPress={() => { setModalVisible(false); setProfileVisible(true); navigation.navigate('Homescreen'); }}>
+            <TouchableOpacity onPress={() => { setModalVisible(false); setProfileVisible(true); navigation.navigate('AdminView'); }}>
               <Text style={styles.modalText}>Home</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { setModalVisible(false); setProfileVisible(true); navigation.navigate('Settings'); }}>
@@ -130,20 +85,20 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image2: {
-    width: 30,
+    width: 45,
     height: 20,
   },
   image1: {
-    width: 30,
+    width: 55,
     height: 30,
     marginBottom: 20,
     marginTop: 30,
   },
   image3: {
-    width: 170,
-    height: 170,
+    width: 150,
+    height: 200,
     position: 'absolute',
-    top: 100,
+    top: 90,
   },
   image6: {
     width: 200,
@@ -157,12 +112,24 @@ const styles = StyleSheet.create({
     marginTop: 250,
     marginBottom: 20,
   },
+  searchBox: {
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    width: 300,
+    marginRight: 0,
+    marginTop: 70,
+  },
+  searchIcon: {
+    width: 20,
+    height: 20,
+  },
   squareRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
     marginBottom: 20,
-    top: 400,
   },
   singleSquare: {
     justifyContent: 'center',
@@ -211,10 +178,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
     marginVertical: 10,
-  },
-  loginButtonText: {
-    fontSize: 16,
-    color: 'black',
   },
 });
 

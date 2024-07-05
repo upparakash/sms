@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Image, Scro
 import { useNavigation } from '@react-navigation/native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Image1 from '../assets/Verified.png';
+import Image2 from '../assets/BackArrow.png';
 import axios from 'axios';
 
 const StudentLeave = ({ route }) => {
@@ -18,6 +19,7 @@ const StudentLeave = ({ route }) => {
   const [description, setDescription] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [errors, setErrors] = useState({});
+  const [yourEmail, setYourEmail] = useState('');
   const email = route.params.email;
 
   const validate = () => {
@@ -45,6 +47,7 @@ const StudentLeave = ({ route }) => {
         setFullname(profile.fullname);
         setClassName(profile.className);
         setSection(profile.section);
+        setYourEmail(profile.email)
       } catch (err) {
         setErrors('Failed to load profile data');
       }
@@ -62,6 +65,7 @@ const StudentLeave = ({ route }) => {
         fullname,
         className,
         section,
+        email,
         recipient,
         leavePurpose,
         startDate,
@@ -112,6 +116,15 @@ const StudentLeave = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.heading}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={Image2} style={styles.image} />
+        </TouchableOpacity>
+        <Text style={styles.header}>Leave Letter</Text>
+        <TouchableOpacity onPress={() =>navigation.navigate('LeaveApproval',{email})}>
+           <Text style ={styles.button}>My Leaves</Text>
+        </TouchableOpacity>
+        </View>
       <View style={styles.row}>
         <Text style={styles.details}>
           {fullname}
@@ -220,7 +233,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 10,
+  },
+  heading: {
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    borderBottomWidth :2,
+    borderColor:'gray',
+    margin:10,
+    marginBottom:10,
+  },  
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
+  },
+  image: {
+    height: 30,
+    width: 30,
+  },
+  button: {
+    alignItems: 'center',
+    color: "white",
+    backgroundColor: "#3F1175",
+    fontSize: 18,
+    fontWeight: 'bold',
+    borderRadius: 15,
+    padding: 5,
+    textAlign: 'center',
+    left:10,
+    top:-5,
   },
   row: {
     flexDirection: 'row',

@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, FlatList } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
-const AdminTeacherLeave = () => {
+const AdminStudentLeave = () => {
+    const navigation = useNavigation();
     const [leaves, setLeaves] = useState([]);
     const [errors, setErrors] = useState({});
+    const [approval, setApproval] = useState(null);
 
     useEffect(() => {
-        const fetchTeacherLeaves = async () => {
+        const fetchStudentLeaves = async () => {
             try {
-                const response = await axios.get('http://10.0.2.2:3000/teacherLeaves');
+                const response = await axios.get('http://10.0.2.2:3000/studentLeaves?approval=null');
                 setLeaves(response.data);
             } catch (err) {
                 setErrors({ general: 'Failed to load leaves' });
             }
         };
-        fetchTeacherLeaves();
+        fetchStudentLeaves();
     }, []);
 
     const updateLeaveStatus = async (id, status) => {
         try {
-            await axios.put(`http://10.0.2.2:3000/teacherLeaves/${id}`, { approval: status });
+            await axios.put(`http://10.0.2.2:3000/studentLeaves/${id}`, { approval: status });
             setLeaves(leaves.filter(leave => leave.id !== id));
         } catch (err) {
             console.error(err);
@@ -29,10 +32,10 @@ const AdminTeacherLeave = () => {
 
     const renderLeave = ({ item }) => (
         <View style={styles.leaveItem}>
-            <Text style={styles.text}>Leave Purpose: {item.purpose}</Text>
-            <Text style={styles.text}>Employee ID: {item.employeeid}</Text>
-            <Text style={styles.text}>Start Date: {item.startdate} End Date: {item.enddate}</Text>
-            <Text style={styles.text}>Explanation: {item.description}</Text>
+            <Text style={styles.text}>Leave Purpose: {item.leavePurpose}</Text>
+            <Text style={styles.text}>Name: {item.fullname}    Class: {item.className}    Section: {item.section}</Text>
+            <Text style={styles.text}>Start Date: {item.startDate} End Date: {item.endDate}</Text>
+            <Text style={styles.text}>Explanation:{item.description}</Text>
             <View style={styles.buttonContainer}>
                 <Button title="Approve" onPress={() => updateLeaveStatus(item.id, "Approved")} />
                 <Button title="Reject" onPress={() => updateLeaveStatus(item.id, "Rejected")} />
@@ -86,4 +89,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AdminTeacherLeave;
+export default AdminStudentLeave;

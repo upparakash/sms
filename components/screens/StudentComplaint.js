@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
+    backgroundColor:'white',
   },
   successImage: {
     width: 100,

@@ -35,7 +35,7 @@ const TeacherDetails = () => {
     return (
         <View style={styles.container}>
             <View style= {styles.head}>
-                <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('teacherForm')} >
+                <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('TeacherForm')} >
                     <Text style={styles.headText}>Register</Text>
                 </TouchableOpacity>    
                 <Text style={styles.headText}>Modify</Text>

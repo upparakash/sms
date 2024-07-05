@@ -50,10 +50,12 @@ const AdminTeacherHomeScreen = ({ navigation }) => {
               <Text>Teacher Announcements</Text>
             </View>
           </TouchableOpacity>
-          <View style={styles.square} >
-            <Image source={Image11} style={styles.squareImage} />
-            <Text>Teacher Leave</Text>
-          </View>
+          <TouchableOpacity onPress={() =>navigation.navigate('AdminTeacherLeave')}>
+            <View style={styles.square} >
+              <Image source={Image11} style={styles.squareImage} />
+              <Text>Teacher Leave</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
       

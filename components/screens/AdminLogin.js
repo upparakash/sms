@@ -41,7 +41,7 @@ const AdminLogin = () => {
           }
         })
         .catch(error => {
-          console.error('Axios Error:', error);
+          // console.error('Axios Error:', error);
           alert('Error logging in. Please try again later.');
         });
     }

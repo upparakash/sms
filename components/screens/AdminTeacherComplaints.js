@@ -23,7 +23,7 @@ const AdminTeacherComplaints =({route}) =>{
 
     const resolveComplaint = async (id) =>{
         try{
-            await axios.put(`http://10.0.2.2:3000/teacherComplaint/${id}/resolve`);
+            await axios.put(`http://10.0.2.2:3000/teacherComplaints/${id}/resolve`);
             setComplaints(complaints.filter(complaint =>complaint.id !==id));
         }catch(err){
             console.error(err);

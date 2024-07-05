@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import Image1 from '../assets/Verified.png';
 
-const TeacherAnnouncements = ({route}) =>{
+const StudentAnnouncements = ({route}) =>{
     const navigation = useNavigation();
     const [errors, setErrors] = useState({});
     const [subject, setSubject] = useState('');
@@ -33,7 +33,7 @@ const TeacherAnnouncements = ({route}) =>{
                 const response = await axios.post('http://10.0.2.2:3000/announcements',{
                     subject,
                     explanation,
-                    reciver: "Teacher",
+                    reciver: "Student",
                 });
                 if(response.status ===200){
                    handleSend(); 
@@ -57,7 +57,7 @@ const TeacherAnnouncements = ({route}) =>{
 
     const handleModalClose = () =>{
         setIsModalVisible(false);
-        navigation.navigate('AdminTeacherHomeScreen');
+        navigation.navigate('AdminStudentHomeScreen');
     };
 
     return (
@@ -181,4 +181,4 @@ const TeacherAnnouncements = ({route}) =>{
     },
 });
 
-export default TeacherAnnouncements;
+export default StudentAnnouncements;
